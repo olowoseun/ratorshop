@@ -1,13 +1,33 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux'
+import './bootstrap.min.css'
 import './index.css';
 import App from './App';
+import configureStore from './redux/configureStore'
 import reportWebVitals from './reportWebVitals';
 
+const localStorageCartItems = localStorage.getItem('cartItems')
+const localStorageUserInfo = localStorage.getItem('userInfo')
+const localStorageShippingAddress = localStorage.getItem('shippingAddress')
+
+const cartItemsFromStorage = localStorageCartItems ? JSON.parse(localStorageCartItems) : [] 
+const userInfoFromStorage = localStorageUserInfo ? JSON.parse(localStorageUserInfo) : null
+const shippingAddressFromStorage = localStorageShippingAddress ? JSON.parse(localStorageShippingAddress) : {}
+
+const initialState = { 
+  cart: {
+    cartItems: cartItemsFromStorage,
+    shippingAddress: shippingAddressFromStorage 
+  },
+  userSignin: { userInfo: userInfoFromStorage }
+}
+const store = configureStore(initialState)
+
 ReactDOM.render(
-  <React.StrictMode>
+  <Provider store={store}>
     <App />
-  </React.StrictMode>,
+  </Provider>,
   document.getElementById('root')
 );
 

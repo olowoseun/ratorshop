@@ -51,40 +51,44 @@ const getOrderById = asyncHandler( async(req, res) => {
 // @route GET /api/orders/:id/pay
 // @access Private
 const updateOrderToPaid = asyncHandler( async(req, res) => {
-  const order = await Order.findById(req.params.id)
+  const order = await Order.findByIdAndUpdate(req.params.id, {
+    $set: {
+      isPaid: true,
+      paidAt: Date.now(),
+      paymentResult: {
+        id: req.body.id,
+        status: req.body.status,
+        update_time: req.body.update_time,
+        email_address: req.body.payer.email_address
+      }
+    }
+  }, { new: true })
 
   if(!order) {
     res.status(404)
     throw new Error('Order not found.')
-  }
-  order.isPaid = true
-  order.paidAt = Date.now()
-  order.paymentResult = {
-    id: req.body.id,
-    status: req.body.status,
-    update_time: req.body.update_time,
-    email_address: req.body.payer.email_address
-  }
+  }  
 
-  updatedOrder = await order.save()
-  res.json(updatedOrder)
+  res.json(order)
 })
 
 // @desc Update order to delivered
 // @route GET /api/orders/:id/deliver
 // @access Private/Admin
 const updateOrderToDelivered = asyncHandler( async(req, res) => {
-  const order = await Order.findById(req.params.id)
+  const order = await Order.findByIdAndUpdate(req.params.id, {
+    $set: {
+      isDelivered: true,
+      deliveredAt: Date.now()    
+    }
+  }, { new: true })
 
   if(!order) {
     res.status(404)
     throw new Error('Order not found.')
   }
-  order.isDelivered = true
-  order.deliveredAt = Date.now()
 
-  updatedOrder = await order.save()
-  res.json(updatedOrder)
+  res.json(order)
 })
 
 // @desc Get signed in user orders

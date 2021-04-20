@@ -1,5 +1,6 @@
 import * as types from '../constants/userTypes'
 import * as orderTypes from '../constants/orderTypes'
+import * as cartTypes from '../constants/cartTypes'
 import axios from 'axios'
 
 export const signin = (email, password) => async(dispatch) => {
@@ -30,6 +31,7 @@ export const signout = () => (dispatch) => {
   dispatch({ type: types.USER_DETAILS_RESET})
   dispatch({ type: orderTypes.MY_ORDER_LIST_RESET})
   dispatch({ type: types.USER_LIST_RESET })
+  dispatch({ type: cartTypes.CART_RESET})
 } 
 
 export const signup = (name, email, password) => async(dispatch) => {

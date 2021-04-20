@@ -7,7 +7,7 @@ import { PayPalButton } from 'react-paypal-button-v2'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { deliverOrder, getOrderDetails, payOrder } from '../redux/actions/orderActions'
-import * as types from '../redux/constants/orderTypes'
+import { ORDER_PAY_RESET, ORDER_DELIVER_RESET } from '../redux/constants/orderTypes'
 
 const OrderScreen = ({ history, match }) => {
   const orderId = match.params.id
@@ -51,8 +51,8 @@ const OrderScreen = ({ history, match }) => {
     }
     
     if(!order || successPay || successDeliver) {
-      dispatch({ type: types.ORDER_PAY_RESET})
-      dispatch({ type: types.ORDER_DELIVER_RESET})
+      dispatch({ type: ORDER_PAY_RESET})
+      dispatch({ type: ORDER_DELIVER_RESET})
       dispatch(getOrderDetails(orderId))
     } else if(!order.isPaid) {
       if(!window.paypal) {

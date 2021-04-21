@@ -4,8 +4,10 @@ import { Button, Form, Row, Col, Table } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import { getUserDetails, userUpdateProfile } from '../redux/actions/userActions'
 import { listMyOrders } from '../redux/actions/orderActions'
+import { USER_UPDATE_PROFILE_RESET } from '../redux/constants/userTypes'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
+
 
 const ProfileScreen = ({ history }) => {
   const [name, setName] = useState('')
@@ -31,13 +33,14 @@ const ProfileScreen = ({ history }) => {
   useEffect(() => {
     if(!userInfo) return history.push('/signin')
 
-    if(!user.name) {
+    if(!user || !user.name || success) {
+      dispatch({ type: USER_UPDATE_PROFILE_RESET })
       dispatch(getUserDetails('profile'))
       dispatch(listMyOrders())
     } 
     setName(user.name)
     setEmail(user.email)
-  }, [dispatch, history, userInfo, user])
+  }, [dispatch, history, userInfo, user, success])
 
   const submitHandler = e => {
     e.preventDefault()
@@ -118,7 +121,7 @@ const ProfileScreen = ({ history }) => {
                     : (<i className='fas fa-times' style={{ color: 'red' }}></i>)}
                   </td>
                   <td>{order.isDelivered ? (order.deliveredAt.substring(0, 10))
-                    : (<i className='fas fa-times' style={{ color: 'red' }}></i>)}
+                    : (<i className='fas fa-times' st yle={{ color: 'red' }}></i>)}
                   </td>
                   <td>
                     <LinkContainer to={`/orders/${order._id}`}>
